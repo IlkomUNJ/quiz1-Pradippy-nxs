@@ -35,7 +35,7 @@ int main()
         prompt = static_cast<PrimaryPrompt>(choice - 1);
         switch (prompt)
         {
-        case LOGIN:
+        case LOGIN:{
             cout << "Login selected." << endl;
             /* if Login is selected, based on authority then provide options:
             assume user is logged in as Buyer for now
@@ -87,7 +87,68 @@ int main()
             9. Exit to main Menu
             10. Exit Program
             **/
-            break;
+            if (buyers.empty())
+            {
+                cout << "No user exists. Please register first.\n";
+                break;
+            }
+
+            cout << "Enter your User ID: ";
+            int loginId;
+            cin >> loginId;
+
+            bool foundUser = false;
+            for (Buyer &user : buyers)
+            {
+                if (user.getId() == loginId)
+                {
+                    cout << "Logged in! Welcome, " << user.getName() << ".\n";
+                    foundUser = true;
+
+                    bool loggedIn = true;
+                    while (loggedIn)
+                    {
+                        cout << "\nLogged in as " << user.getName() << "\n";
+                        cout << "1. Check Account Status\n";
+                        cout << "2. Logout\n";
+                        cout << "Choice: ";
+
+                        int choice;
+                        cin >> choice;
+
+                        switch (choice)
+                        {
+                        case 1:
+                        {
+                            cout << "\nYour Account Status\n";
+                            cout << "User ID: " << user.getId() << endl;
+                            cout << "Name: " << user.getName() << endl;
+                            cout << "Linked Bank Account\n";
+                            user.getAccount().printInfo();
+                            break;
+                        }
+                        case 2:
+                        {
+                            cout << "Logging out.\n";
+                            loggedIn = false;
+                            break;
+                        }
+                        default:
+                        {
+                            cout << "Invalid option.\n";
+                            break;
+                        }
+                        }
+                    }
+                    break;
+                }
+            }
+
+            if (!foundUser)
+            {
+                cout << "Login failed. User ID not found.\n";
+            }
+            break;}
         case REGISTER:
         {
             cout << "Register selected." << endl;
@@ -103,7 +164,7 @@ int main()
             cin >> choice;
 
             string name, address, phone, email;
-            double initialBalance = 0; 
+            double initialBalance = 0;
 
             cout << "Enter Name: ";
             cin >> name;
@@ -123,11 +184,11 @@ int main()
             Buyer &newBuyer = buyers.back();
 
             if (choice == 1)
-            { 
+            {
                 cout << "Buyer created. ID: " << newBuyer.getId() << endl;
             }
             else if (choice == 2)
-            { 
+            {
                 string storeName, storeAddress, storePhone, storeEmail;
                 cout << "Enter Store Name: ";
                 cin >> storeName;
